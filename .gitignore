@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.wasmer/
+.env
+.local/
+*.log
+test-results/

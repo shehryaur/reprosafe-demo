@@ -1,0 +1,39 @@
+{
+  "name": "reprosafe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local, verified synthetic reproducers for private customer bugs.",
+  "scripts": {
+    "dev": "node server/index.ts",
+    "build": "tsc --noEmit && vite build",
+    "start": "node server/index.ts --production",
+    "test": "node --test tests/*.test.ts",
+    "test:integration": "node tests/integration.ts",
+    "check:runtime": "node scripts/check-runtime.ts"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.125.0",
+    "@types/diff": "7.0.2",
+    "@types/express": "5.0.6",
+    "@types/node": "26.5.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "@wasmer/sdk": "0.13.0",
+    "csv-parse": "7.0.2",
+    "diff": "9.0.0",
+    "express": "5.2.1",
+    "fflate": "0.8.3",
+    "lucide-react": "1.45.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "zod": "4.6.4"
+  }
+}
