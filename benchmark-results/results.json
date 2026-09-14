@@ -1,0 +1,374 @@
+{
+  "measuredAt": "2026-09-13T22:40:56.450Z",
+  "environment": {
+    "os": "win32 10.0.26200",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz",
+    "logicalCpus": 8,
+    "ramGiB": 7.746696472167969,
+    "node": "v24.15.0",
+    "wasmer": "0.13.0"
+  },
+  "dataset": {
+    "records": 60,
+    "batches": 6,
+    "uniqueBugFamilies": 1,
+    "recordsSha256": "e4cd312f747a91f9a79cf193cf91ae75b33bddc5413c0ec1423b1ee204dd3271",
+    "sourceBytes": 249,
+    "inputBytes": 5819,
+    "selection": "Six batches of ten, five comma descriptions per batch. Targeted test, not a random benchmark. Real public transaction data; deliberately buggy source."
+  },
+  "baseline": {
+    "product": "Presidio Anonymizer",
+    "version": "2.2.364",
+    "records": 60,
+    "transformWallMs": 35.94899999916379,
+    "transformCpuMs": 0,
+    "peakProcessRssBytes": 28041216,
+    "modelCalls": 0,
+    "networkRequests": 0,
+    "scope": "Presidio standard replace operator with supplied exact field spans. Includes CSV adaptation; excludes Python/import startup and bug execution. Not a detection-accuracy test.",
+    "processWallMs": 585.1185,
+    "preserved": 0,
+    "medianValidationWallMs": 10181.766249999993
+  },
+  "reprosafe": {
+    "preserved": 6,
+    "medianValidationWallMs": 8619.9378,
+    "transformWallMs": 10.52750000001106,
+    "knownOriginalStringsRemaining": 0,
+    "externalModelCalls": 0
+  },
+  "resources": {
+    "totalSandboxExecutions": 25,
+    "totalSandboxUserCpuMs": 253568,
+    "totalSandboxSystemCpuMs": 15928,
+    "maxSingleWorkerRssMiB": 558.5234375,
+    "scope": "Entire experiment: warmup + original, two replacement checks, fixed original per batch. Worker CPU/RSS include Python/Wasmer initialization; RSS excludes parent app. This is not total machine energy or a cloud comparison."
+  },
+  "aws": {
+    "measured": false,
+    "service": "Amazon Comprehend DetectPiiEntities",
+    "estimatedRequests": 60,
+    "estimatedBillable100CharacterUnits": 180,
+    "usdPerUnit": 0.0001,
+    "estimatedApiUsd": 0.018000000000000002,
+    "pricingSource": "https://aws.amazon.com/comprehend/pricing/",
+    "assumptions": "One serialized record per request; max(3,ceil(characters/100)); published example rate, before free tier, taxes, storage and transfer. This estimates PII detection only, not bug reproduction. Actual AWS accuracy, CPU, memory, latency and cost were not measured."
+  },
+  "limits": [
+    "Presidio was given exact field spans and its standard replace operator; no Analyzer/NLP model. Custom Presidio operators could preserve delimiters.",
+    "Both replacements run locally with zero model calls; ReproSafe is not uniquely local or universally cheaper.",
+    "A fixed demonstration patch is supplied, not AI-generated. No real model request was benchmarked.",
+    "Six cases share one known delimiter bug family. Results do not establish general privacy, security, speed or superiority over AWS.",
+    "Zero known marker matches is a limited scan, not an anonymization guarantee."
+  ],
+  "blockedParentNetworkAttempts": 0,
+  "runs": [
+    {
+      "batch": 1,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 16699.655700000003,
+        "resources": {
+          "userCpuMs": 14921,
+          "systemCpuMs": 640,
+          "maxRssKiB": 568628
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 17698.400500000003,
+        "resources": {
+          "userCpuMs": 15875,
+          "systemCpuMs": 1140,
+          "maxRssKiB": 561756
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 10498.873400000004,
+        "resources": {
+          "userCpuMs": 10281,
+          "systemCpuMs": 687,
+          "maxRssKiB": 571928
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 2.23070000000007
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 10636.554800000005,
+        "resources": {
+          "userCpuMs": 10937,
+          "systemCpuMs": 687,
+          "maxRssKiB": 568508
+        }
+      }
+    },
+    {
+      "batch": 2,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 14768.983299999993,
+        "resources": {
+          "userCpuMs": 14296,
+          "systemCpuMs": 765,
+          "maxRssKiB": 560960
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 8346.59090000001,
+        "resources": {
+          "userCpuMs": 8687,
+          "systemCpuMs": 640,
+          "maxRssKiB": 560164
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 8686.940399999992,
+        "resources": {
+          "userCpuMs": 8750,
+          "systemCpuMs": 625,
+          "maxRssKiB": 561164
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 3.717000000004191
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 7582.096799999999,
+        "resources": {
+          "userCpuMs": 7937,
+          "systemCpuMs": 515,
+          "maxRssKiB": 569508
+        }
+      }
+    },
+    {
+      "batch": 3,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 7317.569300000003,
+        "resources": {
+          "userCpuMs": 7703,
+          "systemCpuMs": 406,
+          "maxRssKiB": 569256
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 9743.723799999992,
+        "resources": {
+          "userCpuMs": 9937,
+          "systemCpuMs": 562,
+          "maxRssKiB": 560700
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 8034.097200000004,
+        "resources": {
+          "userCpuMs": 8625,
+          "systemCpuMs": 406,
+          "maxRssKiB": 560676
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 1.106100000004517
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 8203.26019999999,
+        "resources": {
+          "userCpuMs": 8468,
+          "systemCpuMs": 546,
+          "maxRssKiB": 554816
+        }
+      }
+    },
+    {
+      "batch": 4,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 8133.405699999974,
+        "resources": {
+          "userCpuMs": 8750,
+          "systemCpuMs": 562,
+          "maxRssKiB": 568188
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 7781.684399999998,
+        "resources": {
+          "userCpuMs": 8062,
+          "systemCpuMs": 453,
+          "maxRssKiB": 568632
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 8160.651200000022,
+        "resources": {
+          "userCpuMs": 8484,
+          "systemCpuMs": 578,
+          "maxRssKiB": 570864
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 1.2707999999984168
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 8095.310200000007,
+        "resources": {
+          "userCpuMs": 8406,
+          "systemCpuMs": 484,
+          "maxRssKiB": 569348
+        }
+      }
+    },
+    {
+      "batch": 5,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 9683.605700000015,
+        "resources": {
+          "userCpuMs": 9781,
+          "systemCpuMs": 875,
+          "maxRssKiB": 569560
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 10619.808699999994,
+        "resources": {
+          "userCpuMs": 10890,
+          "systemCpuMs": 1000,
+          "maxRssKiB": 570068
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 8552.935200000007,
+        "resources": {
+          "userCpuMs": 8812,
+          "systemCpuMs": 328,
+          "maxRssKiB": 570972
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 1.1839000000036322
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 8193.462100000004,
+        "resources": {
+          "userCpuMs": 8562,
+          "systemCpuMs": 500,
+          "maxRssKiB": 568692
+        }
+      }
+    },
+    {
+      "batch": 6,
+      "records": 10,
+      "commaDescriptions": 5,
+      "original": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 9121.8309,
+        "resources": {
+          "userCpuMs": 9640,
+          "systemCpuMs": 687,
+          "maxRssKiB": 568404
+        }
+      },
+      "presidio": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 11665.478599999973,
+        "resources": {
+          "userCpuMs": 11625,
+          "systemCpuMs": 812,
+          "maxRssKiB": 568680
+        },
+        "preserved": false,
+        "knownOriginalStringsRemaining": 0
+      },
+      "reprosafe": {
+        "status": "fail",
+        "code": "CSV_PARSE_ERROR",
+        "wallMs": 16158.592999999993,
+        "resources": {
+          "userCpuMs": 14390,
+          "systemCpuMs": 750,
+          "maxRssKiB": 563572
+        },
+        "preserved": true,
+        "knownOriginalStringsRemaining": 0,
+        "releaseErrors": [],
+        "transformMs": 1.0190000000002328
+      },
+      "fixed": {
+        "status": "pass",
+        "code": "PASS",
+        "wallMs": 10258.888200000016,
+        "resources": {
+          "userCpuMs": 10640,
+          "systemCpuMs": 640,
+          "maxRssKiB": 563332
+        }
+      }
+    }
+  ]
+}

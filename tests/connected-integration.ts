@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import type { AppStatus, CaseView } from '../shared/types.ts';
+import { hashSource } from '../server/workflow.ts';
+
+const base=process.env.REPROSAFE_TEST_URL || 'http://127.0.0.1:4319';
+const status=await (await fetch(`${base}/api/status`)).json() as AppStatus;
+const headers={'Content-Type':'application/json','X-ReproSafe-Token':status.token};
+const checks:string[]=[];
+async function call(path:string,body?:unknown,expected=200) {
+  const response=await fetch(`${base}/api${path}`,body===undefined?{}:{method:'POST',headers,body:JSON.stringify(body)});
+  const data=await response.json(); assert.equal(response.status,expected,JSON.stringify(data)); return data;
+}
+const pass=(name:string)=>{checks.push(name); console.log(`PASS ${name}`);};
+const demo=await call('/demo/retail'); assert.equal(demo.records.length,60);
+let session=await call('/cases',demo,201) as CaseView;
+await call(`/cases/${session.id}/auto`,{mode:'automatic',patch:'sample',applyLocal:true,consent:false},400);
+session=await call(`/cases/${session.id}`); assert.equal(session.original,undefined);
+pass('automatic work requires explicit consent');
+session=await call(`/cases/${session.id}/auto`,{mode:'review',patch:'sample',applyLocal:true,consent:false});
+assert.equal(session.automation?.state,'awaiting-apply'); assert.equal(session.applied,undefined); assert.ok(session.validation?.every(v=>v.result.status==='pass'));
+pass('human mode runs real public data and four checks, then pauses before saving');
+await call(`/cases/${session.id}/auto/continue`,{reviewed:true,hash:'stale'},409);
+await call(`/cases/${session.id}/auto/continue`,{reviewed:false,hash:hashSource(session.patch!)},400);
+session=await call(`/cases/${session.id}/auto/continue`,{reviewed:true,hash:hashSource(session.patch!)});
+assert.equal(session.automation?.state,'complete'); assert.equal(await readFile(session.applied!.path,'utf8'),session.patch);
+pass('only current reviewed patch is applied to a new local file');
+const original=demo.source;
+let auto=await call('/cases',{...demo,records:demo.records.slice(0,10)},201) as CaseView;
+const start=performance.now();
+auto=await call(`/cases/${auto.id}/auto`,{mode:'automatic',patch:'sample',applyLocal:true,consent:true});
+const automaticWallMs=performance.now()-start;
+assert.equal(auto.automation?.state,'complete'); assert.ok(auto.applied); assert.equal(auto.source,original); assert.equal(auto.patchOrigin,'sample');
+pass('automatic mode reproduces, replaces, validates and applies without extra prompts');
+await call(`/cases/${auto.id}/patch`,{source:'def process(records):\n    return []\n',origin:'manual'});
+await call(`/cases/${auto.id}/apply`,{reviewed:true,hash:hashSource('def process(records):\n    return []\n')},400);
+pass('editing a patch invalidates validation and prevents application');
+await call('/connectors/supabase/connect',{url:'https://localhost',key:'sb_publishable_example'},400);
+await call('/connectors/supabase/connect',{url:'https://abcdefghijklmnopqrst.supabase.co',key:'sb_secret_admin'},400);
+pass('connector API rejects unsafe destinations and privileged Supabase keys');
+await mkdir('test-results',{recursive:true});
+await writeFile('test-results/connected-integration.json',JSON.stringify({verifiedAt:new Date().toISOString(),checks,automaticWallMs,externalModelCalls:0,note:'Bundled patch used. Live credentialed GitHub/Supabase and Gemini are not exercised here.'},null,2));
+console.log(`${checks.length} checks passed; 10-record Auto wall time ${automaticWallMs.toFixed(1)} ms.`);

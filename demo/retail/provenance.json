@@ -1,0 +1,17 @@
+{
+  "dataset": "Chen, D. (2015). Online Retail. UCI Machine Learning Repository.",
+  "doi": "https://doi.org/10.24432/C5BW33",
+  "source": "https://archive.ics.uci.edu/dataset/352/online+retail",
+  "download": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "retrievedAt": "2026-09-13T22:31:46.399387+00:00",
+  "archiveSha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+  "recordsSha256": "e4cd312f747a91f9a79cf193cf91ae75b33bddc5413c0ec1423b1ee204dd3271",
+  "selection": "First 30 eligible comma-containing descriptions and first 30 without commas, interleaved. Positive/zero non-cancelled line amounts with CustomerID. Targeted selection, not random sampling.",
+  "adaptation": "Description becomes CSV first column; round-half-up Quantity * UnitPrice * 100 becomes integer pence. The existing contract calls this amount_cents/name but these values are GBP pence/product descriptions, not personal names. CustomerID, InvoiceNo and source row form reference.",
+  "code": "buggy.py is an intentionally incorrect demonstration importer written for ReproSafe, not a bug found in the original retailer software.",
+  "rows": 60,
+  "commaRows": 30,
+  "plainRows": 30
+}
